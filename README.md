@@ -33,4 +33,16 @@ avltree.deleteNode(key);
 
 ```
 
+```c++
+Btree * btree;
+
+int key;
+int value;
+
+btree->insert(key, value);
+btree->search(key);
+btree->deleteNode(key);
+
+```
+
 ## Acknowledgments
