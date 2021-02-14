@@ -20,4 +20,29 @@ $ sudo apt install g++
 $ ..
 ```
 
+## Tip
+```c++
+Avltree avltree;
+
+int key;
+int value;
+
+avltree.insert(key, value);
+avltree.search(key);
+avltree.deleteNode(key);
+
+```
+
+```c++
+Btree * btree;
+
+int key;
+int value;
+
+btree->insert(key, value);
+btree->search(key);
+btree->deleteNode(key);
+
+```
+
 ## Acknowledgments
