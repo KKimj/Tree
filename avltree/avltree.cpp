@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-
+//#define VERBOSE
 
 void Avltree::Print(char* filepath)
 {
@@ -35,7 +35,7 @@ void Avltree::_Traversal(Node* node)
     _Traversal(node->left);
     fprintf(this->out, "%d ", node->value);
 #ifdef VERBOSE
-    fprintf((FILE*)out, "%d ", now->height);
+    fprintf(this->out, "%d ", now->height);
 #endif
     fprintf(this->out, "\n");
     _Traversal(node->right);
