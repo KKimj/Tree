@@ -34,7 +34,7 @@ public:
         bf_right = 0;
     }
 
-    Node* rightRotate()
+    Node* RightRotate()
     {
         Node* tmp = this->left;
         Node* tmp2 = tmp->right;
@@ -53,7 +53,7 @@ public:
         return tmp;*/
 
     }
-    Node* leftRotate()
+    Node* LeftRotate()
     {
         Node* tmp = this->right;
         Node* tmp2 = tmp->left;
@@ -146,10 +146,10 @@ public:
 
     FILE* out;
 
-    int insert(int value);
-    int search(int key);
-    void deleteNode(int key);
-    void print(char* filepath);
+    int Insert(int value);
+    int Search(int key);
+    void Delete(int key);
+    void Print(char* filepath);
 
 
 
@@ -161,10 +161,10 @@ public:
         out = nullptr;
     }
 private:
-    void _traversal(Node* node);
-    int _search(int key);
-    Node* _insert(Node* node, int key, int value);
-    Node* _delete(Node* node, int key);
+    void _Traversal(Node* node);
+    int _Search(int key);
+    Node* _Insert(Node* node, int key, int value);
+    Node* _Delete(Node* node, int key);
 };
 
 #endif

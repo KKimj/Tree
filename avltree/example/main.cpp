@@ -25,7 +25,7 @@ int main()
         scanf("%d %d", &key, &value);
         //scanf("%d", &key);
 
-        array_key[i] = avltree.insert(key);
+        array_key[i] = avltree.Insert(key);
     }
     printf("삽입을 완료했습니다..\n");
 
@@ -33,7 +33,7 @@ int main()
     FILE* search_out = fopen("search.csv", "w");
     for (i = 0; i < data_n; i++)
     {
-        fprintf(search_out, "%d\n", avltree.search(array_key[i]));
+        fprintf(search_out, "%d\n", avltree.Search(array_key[i]));
     }
     fclose(search_out);
     printf("검색을 완료했습니다..\n");
@@ -41,12 +41,12 @@ int main()
 
     for (i = 0; i < (data_n + 1) / 2; i++)
     {
-        avltree.deleteNode(array_key[i]);
+        avltree.Delete(array_key[i]);
     }
     printf("삭제를 완료했습니다..\n현재 데이터 개수 %d\n", avltree.count);
     // FILE* delete_out = fopen("delete.out", "w");
     char delete_file[] = "delete.csv";
-    avltree.print(delete_file);
+    avltree.Print(delete_file);
     // tree 탐색..
     printf("삭제 결과 저장 완료했습니다..\n");
 

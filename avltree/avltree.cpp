@@ -4,44 +4,44 @@
 
 
 
-void Avltree::print(char* filepath)
+void Avltree::Print(char* filepath)
 {
     this->out = fopen(filepath, "w");
-    _traversal(this->root);
+    _Traversal(this->root);
     fclose(this->out);
 }
 
-int Avltree::insert(int value)
+int Avltree::Insert(int value)
 {
-    this->root = _insert(this->root, value, value);
+    this->root = _Insert(this->root, value, value);
     this->count++;
     return value;
 }
-int Avltree::search(int key)
+int Avltree::Search(int key)
 {
-    return this->_search(key);
+    return this->_Search(key);
 }
-void Avltree::deleteNode(int key)
+void Avltree::Delete(int key)
 {
-    this->root = _delete(this->root, key);
+    this->root = _Delete(this->root, key);
 }
 
 
 
-void Avltree::_traversal(Node* node)
+void Avltree::_Traversal(Node* node)
 {
     if (node == nullptr) return;
 
-    _traversal(node->left);
+    _Traversal(node->left);
     fprintf(this->out, "%d ", node->value);
 #ifdef VERBOSE
     fprintf((FILE*)out, "%d ", now->height);
 #endif
     fprintf(this->out, "\n");
-    _traversal(node->right);
+    _Traversal(node->right);
 }
 
-int Avltree::_search(int key)
+int Avltree::_Search(int key)
 {
     Node* node = this->root;
     if (node == nullptr) return -1;
@@ -70,7 +70,7 @@ int Avltree::_search(int key)
     return node->value;
 }
 
-Node* Avltree::_insert(Node* node, int key, int value)
+Node* Avltree::_Insert(Node* node, int key, int value)
 {
     if (node == nullptr)
     {
@@ -80,11 +80,11 @@ Node* Avltree::_insert(Node* node, int key, int value)
     {
         if (key < node->key)
         {
-            node->left = _insert(node->left, key, value);
+            node->left = _Insert(node->left, key, value);
         }
         else if (key > node->key)
         {
-            node->right = _insert(node->right, key, value);
+            node->right = _Insert(node->right, key, value);
         }
     }
     node->setHeight();
@@ -93,23 +93,23 @@ Node* Avltree::_insert(Node* node, int key, int value)
     {
         if (key < node->left->key)
         {
-            return node->rightRotate();
+            return node->RightRotate();
         }
         else if (key > node->left->key)
         {
-            node->left = node->left->leftRotate();
-            return node->rightRotate();
+            node->left = node->left->LeftRotate();
+            return node->RightRotate();
         }
     }
     if (bf < -1)
     {
         if (key > node->right->key)
         {
-            return node->leftRotate();
+            return node->LeftRotate();
         }
         else if (key < node->right->key) {
-            node->right = node->right->rightRotate();
-            return node->leftRotate();
+            node->right = node->right->RightRotate();
+            return node->LeftRotate();
         }
     }
     return node;
@@ -117,7 +117,7 @@ Node* Avltree::_insert(Node* node, int key, int value)
 
 
 
-Node* Avltree::_delete(Node* node, int key)
+Node* Avltree::_Delete(Node* node, int key)
 {
     if (node == nullptr)
     {
@@ -125,11 +125,11 @@ Node* Avltree::_delete(Node* node, int key)
     }
     else if (key < node->key)
     {
-        node->left = _delete(node->left, key);
+        node->left = _Delete(node->left, key);
     }
     else if (key > node->key)
     {
-        node->right = _delete(node->right, key);
+        node->right = _Delete(node->right, key);
     }
     else if (key == node->key)
     {
@@ -152,7 +152,7 @@ Node* Avltree::_delete(Node* node, int key)
             Node* temp = (node->right)->getMinNode();
             node->key = temp->key;
             node->value = temp->value;
-            node->right = _delete(node->right, temp->key);
+            node->right = _Delete(node->right, temp->key);
         }
     }
     if (node == NULL)
@@ -164,24 +164,24 @@ Node* Avltree::_delete(Node* node, int key)
     {
         if (node->left->getBalanceFactor() >= 0)
         {
-            return node->rightRotate();
+            return node->RightRotate();
         }
         else
         {
-            node->left = node->left->leftRotate();
-            return node->rightRotate();
+            node->left = node->left->LeftRotate();
+            return node->RightRotate();
         }
     }
     if (bf < -1)
     {
         if (node->right->getBalanceFactor() <= 0)
         {
-            return node->leftRotate();
+            return node->LeftRotate();
         }
         else
         {
-            node->right = node->right->rightRotate();
-            return node->leftRotate();
+            node->right = node->right->RightRotate();
+            return node->LeftRotate();
         }
     }
     return node;
