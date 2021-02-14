@@ -4,16 +4,16 @@
 
 
 
-void Btree::print(char* filepath)
+void Btree::Print(char* filepath)
 {
     this->out = fopen(filepath, "w");
-    _traversal(this->root);
+    _Traversal(this->root);
     fclose(this->out);
 }
 
-int Btree::insert(int key, int value)
+int Btree::Insert(int key, int value)
 {
-    if (_search(key) != NULL)
+    if (_Search(key) != NULL)
     {
         return key;
     }
@@ -21,35 +21,35 @@ int Btree::insert(int key, int value)
     if (this->count == 0 || this->root == nullptr)
     {
         this->root = new Node(this->order, true);
-        this->root = this->root->addRecord(key, value, NULL, true, this->order);
+        this->root = this->root->AddRecord(key, value, NULL, true, this->order);
         this->count = 1;
         this->root->isRoot = true;
         return key;
     }
     else
     {
-        this->root = this->_insert(this->root, key, value);
+        this->root = this->_Insert(this->root, key, value);
         return key;
     }
     return key;
 }
-int Btree::search(int key)
+int Btree::Search(int key)
 {
-    int tmp = this->_search(key);
+    int tmp = this->_Search(key);
     if (tmp == NULL)
     {
         return NULL;
     }
     return tmp;
 }
-void Btree::deleteNode(int key)
+void Btree::Delete(int key)
 {
-    this->root = _delete(this->root, key);
+    this->root = _Delete(this->root, key);
 }
 
 
 
-void Btree::_traversal(Node* node)
+void Btree::_Traversal(Node* node)
 {
     if (node == nullptr) return;
 
@@ -64,12 +64,12 @@ void Btree::_traversal(Node* node)
         fprintf((FILE*)out, "%d ", now->height);
 #endif
         fprintf(this->out, "\n");
-        _traversal(node->pointers[i]);
+        _Traversal(node->pointers[i]);
     }
-    _traversal(node->pointers[i]);
+    _Traversal(node->pointers[i]);
 }
 
-int Btree::_search(int key)
+int Btree::_Search(int key)
 {
     Node* node = this->root;
     if (node == nullptr) return NULL;
@@ -104,12 +104,12 @@ int Btree::_search(int key)
     return NULL;
 }
 
-Node* Btree::_insert(Node* node, int key, int value)
+Node* Btree::_Insert(Node* node, int key, int value)
 {
     if (node->isLeaf == true)
     {
-        node = node->addRecord(key, value, NULL, node->isLeaf ,this->order);
-        //node = node->addRecord(key, value, node->parent, this->order);
+        node = node->AddRecord(key, value, NULL, node->isLeaf ,this->order);
+        //node = node->AddRecord(key, value, node->parent, this->order);
         if (node->isLeaf == false)
         {
             if (node->parent == nullptr)
@@ -128,14 +128,14 @@ Node* Btree::_insert(Node* node, int key, int value)
         {
             target++;
         }
-        node = _insert(node->pointers[target], key, value);
+        node = _Insert(node->pointers[target], key, value);
     }
     return node;
 }
 
 
 
-Node* Btree::_delete(Node* node, int key)
+Node* Btree::_Delete(Node* node, int key)
 {
     if (node == nullptr)
     {
@@ -143,11 +143,11 @@ Node* Btree::_delete(Node* node, int key)
     }
     else if (key < node->key)
     {
-        node->left = _delete(node->left, key);
+        node->left = _Delete(node->left, key);
     }
     else if (key > node->key)
     {
-        node->right = _delete(node->right, key);
+        node->right = _Delete(node->right, key);
     }
     else if (key == node->key)
     {
@@ -170,7 +170,7 @@ Node* Btree::_delete(Node* node, int key)
             Node* temp = (node->right)->getMinNode();
             node->key = temp->key;
             node->value = temp->value;
-            node->right = _delete(node->right, temp->key);
+            node->right = _Delete(node->right, temp->key);
         }
     }
     if (node == NULL)

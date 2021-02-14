@@ -108,7 +108,7 @@ public:
         bf_right = 0;
     }
 
-    Node* addRecord(int _key, int _value, Node * pointer, bool isLeaf ,int order)
+    Node* AddRecord(int _key, int _value, Node * pointer, bool isLeaf ,int order)
     {
         
         {
@@ -125,7 +125,7 @@ public:
             }
             this->keys[target] = _key;
             this->values[target] = _value;
-            this->pointers[target] = pointer;
+            this->pointers[target+1] = pointer;
             this->numKeys++;
             this->pointers[this->numKeys] = NULL;
             
@@ -167,7 +167,7 @@ public:
         return this;
     }
 
-    Node* addNode(Node * node)
+    Node* AddNode(Node * node)
     {
         if (node == nullptr)
         {
@@ -307,10 +307,10 @@ public:
 
     FILE* out;
 
-    int insert(int key, int value);
-    int search(int key);
-    void deleteNode(int key);
-    void print(char* filepath);
+    int Insert(int key, int value);
+    int Search(int key);
+    void Delete(int key);
+    void Print(char* filepath);
 
 
 
@@ -323,10 +323,10 @@ public:
         this->order = _order;
     }
 private:
-    void _traversal(Node* node);
-    int _search(int key);
-    Node* _insert(Node* node, int key, int value);
-    Node* _delete(Node* node, int key);
+    void _Traversal(Node* node);
+    int _Search(int key);
+    Node* _Insert(Node* node, int key, int value);
+    Node* _Delete(Node* node, int key);
     Node* _getLeafNode(int _key)
     {
         Node* now = this->root;
