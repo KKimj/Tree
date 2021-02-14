@@ -27,9 +27,9 @@ Avltree avltree;
 int key;
 int value;
 
-avltree.insert(key, value);
-avltree.search(key);
-avltree.deleteNode(key);
+avltree.Insert(key, value);
+avltree.Search(key);
+avltree.Delete(key);
 
 ```
 
@@ -39,9 +39,9 @@ Btree * btree;
 int key;
 int value;
 
-btree->insert(key, value);
-btree->search(key);
-btree->deleteNode(key);
+btree->Insert(key, value);
+btree->Search(key);
+btree->Delete(key);
 
 ```
 
