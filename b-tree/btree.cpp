@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 
+#define VERBOSE
 
 void Btree::Print(char* filepath)
 {
@@ -21,7 +22,7 @@ int Btree::Insert(int key, int value)
     if (this->count == 0 || this->root == nullptr)
     {
         this->root = new Node(this->order, true);
-        this->root = this->root->AddRecord(key, value, NULL, true, this->order);
+        this->root = this->root->AddRecord(key, value, NULL, NULL ,true, this->order);
         this->count = 1;
         this->root->isRoot = true;
         return key;
@@ -61,7 +62,7 @@ void Btree::_Traversal(Node* node)
         fprintf(this->out, "%d ", node->keys[i]);
         fprintf(this->out, "%d ", node->values[i]);
 #ifdef VERBOSE
-        fprintf((FILE*)out, "%d ", now->height);
+        fprintf(this->out, "%d ", i);
 #endif
         fprintf(this->out, "\n");
         _Traversal(node->pointers[i]);
@@ -90,10 +91,6 @@ int Btree::_Search(int key)
 
             break;
         }
-        /*if (i >= node->numKeys)
-        {
-            return NULL;
-        }*/
         node = (Node*)node->pointers[i];
     }
     if (node == nullptr) return NULL;
@@ -108,16 +105,17 @@ Node* Btree::_Insert(Node* node, int key, int value)
 {
     if (node->isLeaf == true)
     {
-        node = node->AddRecord(key, value, NULL, node->isLeaf ,this->order);
-        //node = node->AddRecord(key, value, node->parent, this->order);
+        node = node->AddRecord(key, value, NULL, NULL,node->isLeaf ,this->order);
         if (node->isLeaf == false)
         {
             if (node->parent == nullptr)
             {
                 return node;
             }
-            // split이 일어남
-            // node = node->addNode();
+        }
+        else
+        {
+            return node;
         }
     }
     else
@@ -128,7 +126,22 @@ Node* Btree::_Insert(Node* node, int key, int value)
         {
             target++;
         }
-        node = _Insert(node->pointers[target], key, value);
+        Node * tmp = _Insert(node->pointers[target], key, value);
+        if (tmp->isLeaf == false && node->pointers[target]->isLeaf == true)
+        {
+            tmp->parent = node->parent;
+            node = node->AddNode(tmp, this->order);
+        }
+        else if (node != tmp->parent && tmp->parent == node->parent)
+        {
+            tmp->parent = node->parent;
+            node = node->AddNode(tmp, this->order);
+        }
+        else
+        {
+            tmp->parent = node;
+            node->pointers[target] = tmp;
+        }
     }
     return node;
 }
@@ -141,66 +154,6 @@ Node* Btree::_Delete(Node* node, int key)
     {
         return NULL;
     }
-    else if (key < node->key)
-    {
-        node->left = _Delete(node->left, key);
-    }
-    else if (key > node->key)
-    {
-        node->right = _Delete(node->right, key);
-    }
-    else if (key == node->key)
-    {
-        if ((node->left == nullptr) || (node->right == nullptr))
-        {
-            Node* tmp = node->left ? node->left : node->right;
-            if (node->left == nullptr && node->right == nullptr)
-            {
-                tmp = node;
-                node = nullptr;
-            }
-            else
-            {
-                *node = *tmp;
-            }
-            this->count--;
-            delete(tmp);
-        }
-        else {
-            Node* temp = (node->right)->getMinNode();
-            node->key = temp->key;
-            node->value = temp->value;
-            node->right = _Delete(node->right, temp->key);
-        }
-    }
-    if (node == NULL)
-        return node;
-
-    node->setHeight();
-    int bf = node->getBalanceFactor();
-    if (bf > 1)
-    {
-        if (node->left->getBalanceFactor() >= 0)
-        {
-            return node->rightRotate();
-        }
-        else
-        {
-            node->left = node->left->leftRotate();
-            return node->rightRotate();
-        }
-    }
-    if (bf < -1)
-    {
-        if (node->right->getBalanceFactor() <= 0)
-        {
-            return node->leftRotate();
-        }
-        else
-        {
-            node->right = node->right->rightRotate();
-            return node->leftRotate();
-        }
-    }
+    
     return node;
 }
