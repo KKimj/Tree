@@ -36,6 +36,9 @@ avltree.Delete(key);
 ```c++
 Btree * btree;
 
+int order = 3;
+btree = new Btree(order);
+
 int key;
 int value;
 
