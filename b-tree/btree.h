@@ -33,11 +33,11 @@ public:
     }
 
     
-    Node* AddRecord(int _key, int _value, Node * leftPointer, Node* rightPointer, bool isLeaf ,int order)
+    Node* AddRecord(int key, int value, Node * leftPointer, Node* rightPointer, bool isLeaf ,int order)
     {
         {
             int target = 0, i;
-            while (target < this->numKeys && this->keys[target] < _key)
+            while (target < this->numKeys && this->keys[target] < key)
             {
                 target++;
             }
@@ -49,8 +49,8 @@ public:
                 this->values[i] = this->values[i - 1];
                 this->pointers[i] = this->pointers[i - 1];
             }
-            this->keys[target] = _key;
-            this->values[target] = _value;
+            this->keys[target] = key;
+            this->values[target] = value;
             this->pointers[target] = leftPointer;
             this->pointers[target+1] = rightPointer;
             this->numKeys++;
@@ -101,6 +101,71 @@ public:
     {
         return this->AddRecord(node->keys[0], node->values[0], node->pointers[0], node->pointers[1], this->isLeaf, order);
     }
+
+    Node* DeleteRecord(int key)
+    {
+        int target = 0, i;
+        while (target < this->numKeys && this->keys[target] < key)
+        {
+            target++;
+        }
+        if (this->keys[target] != key)
+        {
+            return this;
+        }
+        
+        for (i = target; i < this->numKeys; i++)
+        {
+            this->keys[i] = this->keys[i + 1];
+            this->values[i] = this->values[i + 1];
+            this->pointers[i] = this->pointers[i + 1];
+        }
+        this->pointers[this->numKeys] = NULL;
+        this->numKeys--;
+        this->keys[this->numKeys] = 0;
+        this->values[this->numKeys] = 0;
+        return this;
+    }
+
+    Node* Merge(int target)
+    {
+        int i;
+        
+        Node* left = this->pointers[target];
+        Node* right = this->pointers[target + 1];
+        left->keys[left->numKeys] = this->keys[target];
+        left->numKeys++;
+
+        // right child
+        i = 0;
+        while (right->numKeys != 0)
+        {
+            left->keys[left->numKeys] = right->keys[i];
+            left->values[left->numKeys] = right->values[i];
+            left->pointers[left->numKeys] = right->pointers[i];
+            i++;
+            left->numKeys++;
+            right->numKeys--;
+        }
+        left->pointers[left->numKeys] = right->pointers[i];
+
+        
+        delete(this->pointers[target + 1]);
+        this->pointers[target + 1] = NULL;
+        right = NULL;
+
+        this->pointers[target + 1] = left;
+        
+        for (i = target; i < this->numKeys; i++)
+        {
+            this->keys[i] = this->keys[i + 1];
+            this->values[i] = this->values[i + 1];
+            this->pointers[i] = this->pointers[i + 1];
+        }
+        this->pointers[target] = left;
+        this->numKeys--;
+        return this;
+    }
 };
 
 
@@ -134,14 +199,14 @@ private:
     int _Search(int key);
     Node* _Insert(Node* node, int key, int value);
     Node* _Delete(Node* node, int key);
-    Node* _getLeafNode(int _key)
+    Node* _getLeafNode(int key)
     {
         Node* now = this->root;
         int target;
         while (now->isLeaf != true)
         {
             target = 0;
-            while (target < now->numKeys && now->keys[target] < _key)
+            while (target < now->numKeys && now->keys[target] < key)
             {
                 target++;
             }
