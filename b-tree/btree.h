@@ -2,7 +2,7 @@
 #define BTREE_H
 #include <cstdio>
 #include <cstdlib>
-
+#include <cstring>
 
 class Node {
 public:
@@ -21,6 +21,11 @@ public:
         this->values = new int[order]();
         this->pointers = (Node **)malloc(sizeof(Node *) * (order+1));
         
+        memset(this->keys, 0, sizeof(int) * order);
+        memset(this->values, 0, sizeof(int) * order);
+        memset(this->pointers, 0, sizeof(Node *) * (order + 1));
+
+
         this->pointers[0] = NULL;
         this->pointers[order-1] = NULL;
 
@@ -114,7 +119,9 @@ public:
             return this;
         }
         
-        for (i = target; i < this->numKeys; i++)
+        free(this->pointers[target]);
+        this->pointers[target] = NULL;
+        for (i = target; i <= this->numKeys; i++)
         {
             this->keys[i] = this->keys[i + 1];
             this->values[i] = this->values[i + 1];
@@ -134,6 +141,7 @@ public:
         Node* left = this->pointers[target];
         Node* right = this->pointers[target + 1];
         left->keys[left->numKeys] = this->keys[target];
+        left->values[left->numKeys] = this->values[target];
         left->numKeys++;
 
         // right child
@@ -156,7 +164,7 @@ public:
 
         this->pointers[target + 1] = left;
         
-        for (i = target; i < this->numKeys; i++)
+        for (i = target; i <= this->numKeys; i++)
         {
             this->keys[i] = this->keys[i + 1];
             this->values[i] = this->values[i + 1];
