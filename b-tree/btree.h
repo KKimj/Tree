@@ -17,14 +17,14 @@ public:
     
     Node(int order, bool _isLeaf)
     {
-        this->keys = new int[order]();
-        this->values = new int[order]();
-        this->pointers = (Node **)malloc(sizeof(Node *) * (order+1));
+        this->keys = new int[order+1]();
+        this->values = new int[order+1]();
+        this->pointers = (Node **)malloc(sizeof(Node *) * (order+2));
         
-        memset(this->keys, 0, sizeof(int) * order);
-        memset(this->values, 0, sizeof(int) * order);
-        memset(this->pointers, 0, sizeof(Node *) * (order + 1));
-
+        memset(this->keys, 0, sizeof(int) * (order + 1));
+        memset(this->values, 0, sizeof(int) * ( order + 1) );
+        memset(this->pointers, 0, sizeof(Node *) * (order + 2));
+        
 
         this->pointers[0] = NULL;
         this->pointers[order-1] = NULL;
@@ -121,7 +121,7 @@ public:
         
         free(this->pointers[target]);
         this->pointers[target] = NULL;
-        for (i = target; i <= this->numKeys; i++)
+        for (i = target; i < this->numKeys; i++)
         {
             this->keys[i] = this->keys[i + 1];
             this->values[i] = this->values[i + 1];
@@ -137,6 +137,10 @@ public:
     Node* Merge(int target)
     {
         int i;
+        if (this->numKeys == 0)
+        {
+            return this->pointers[0];
+        }
         
         Node* left = this->pointers[target];
         Node* right = this->pointers[target + 1];
@@ -146,22 +150,24 @@ public:
 
         // right child
         i = 0;
-        while (right->numKeys != 0)
+        if (right != nullptr && this->numKeys != 0)
         {
-            left->keys[left->numKeys] = right->keys[i];
-            left->values[left->numKeys] = right->values[i];
+            while (right->numKeys > 0)
+            {
+                left->keys[left->numKeys] = right->keys[i];
+                left->values[left->numKeys] = right->values[i];
+                left->pointers[left->numKeys] = right->pointers[i];
+                i++;
+                left->numKeys++;
+                right->numKeys--;
+            }
             left->pointers[left->numKeys] = right->pointers[i];
-            i++;
-            left->numKeys++;
-            right->numKeys--;
+
+            delete(this->pointers[target + 1]);
+            this->pointers[target + 1] = NULL;
+            right = NULL;
         }
-        left->pointers[left->numKeys] = right->pointers[i];
-
         
-        delete(this->pointers[target + 1]);
-        this->pointers[target + 1] = NULL;
-        right = NULL;
-
         this->pointers[target + 1] = left;
         
         for (i = target; i <= this->numKeys; i++)

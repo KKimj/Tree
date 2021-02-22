@@ -17,6 +17,10 @@ int main()
 
         if (mode == 3)
         {
+            /*free(btree->root);
+            btree->root = NULL;
+            delete(btree);
+            btree = NULL;*/
             break;
         }
         else if (mode == 1)
@@ -66,11 +70,19 @@ int main()
         {
             FILE* input = fopen("delete.csv", "r");
             char print_file[] = "print_delete.csv";
-            for (i = 0; i < (data_n + 1) / 2; i++)
+            for (i = 0; i < (data_n + 1) / 2; i++) // (data_n + 1) / 2
             {
                 fscanf(input, "%d %d", &key, &value);
+                if (btree->count == 1)
+                {
+                    printf("check\n");
+                }
                 btree->Delete(key);
                 btree->Print(print_file);
+                if (i % 5 == 0)
+                {
+                    printf("%d : %d check\n", i, btree->count);
+                }
             }
             fclose(input);
             printf("삭제를 완료했습니다..\n현재 데이터 개수 %d\n", btree->count);
@@ -89,6 +101,7 @@ int main()
                     fprintf(delete_out, "%d\tNF\n", array_key[i]);
                 }
             }
+            fclose(delete_out);
             // tree 탐색..
             printf("삭제 결과 저장 완료했습니다..\n");
         }

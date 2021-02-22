@@ -47,6 +47,10 @@ int Btree::Search(int key)
 void Btree::Delete(int key)
 {
     this->root = _Delete(this->root, key);
+    if (this->root == nullptr)
+    {
+        return;
+    }
     if (this->root->numKeys == 0)
     {
         Node* tmp = this->root->pointers[0];
@@ -233,18 +237,27 @@ Node* Btree::_Delete(Node* node, int key)
     {
         _Delete(node->pointers[target], key);
         //node = _Delete(node->pointers[target], key);
+        if (node->pointers[0] != nullptr && node->numKeys == 0)
+        {
+            node = node->Merge(0);
+        }
+        /*else if (node->pointers[0] != nullptr && node->numKeys <= 1 && node->pointers[0]->numKeys<this->order)
+        {
+            node = node->Merge(0);
+        }*/
+        else if (target < node->numKeys && node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && (node->pointers[target]->numKeys + node->pointers[target + 1]->numKeys <this->order))
+        {
+            // target , target + 1
+            node = node->Merge(target);
+        }
+        else if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys + node->pointers[target]->numKeys < this->order))
+        {
+            // target - 1, target
+            node = node->Merge(target - 1);
+        }
     }
 
     // merge
-    if (node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && ( node->pointers[target]->numKeys + node->pointers[target + 1]->numKeys < 2*t ) )
-    {
-        // target , target + 1
-        node = node->Merge(target);
-    }
-    if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys + node->pointers[target]->numKeys < 2*t ))
-    {
-        // target - 1, target
-        node = node->Merge(target - 1);
-    }
+    
     return node;
 }
