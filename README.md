@@ -2,7 +2,7 @@
 
 Develop Status
 - [x] AVL Tree
-- [ ] B-Tree
+- [x] B-Tree
 
 ## Getting Started
 ```
