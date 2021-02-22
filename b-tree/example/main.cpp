@@ -96,7 +96,7 @@ int main()
                 }
                 else
                 {
-                    fprintf(delete_out, "%d\tNF\n", array_key[i]);
+                    fprintf(delete_out, "%d\tN/A\n", array_key[i]);
                 }
             }
             fclose(delete_out);
