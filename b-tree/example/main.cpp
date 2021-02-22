@@ -72,17 +72,15 @@ int main()
             char print_file[] = "print_delete.csv";
             for (i = 0; i < (data_n + 1) / 2; i++) // (data_n + 1) / 2
             {
-                fscanf(input, "%d %d", &key, &value);
-                if (btree->count == 1)
-                {
-                    printf("check\n");
-                }
-                btree->Delete(key);
-                btree->Print(print_file);
                 if (i % 5 == 0)
                 {
                     printf("%d : %d check\n", i, btree->count);
                 }
+                fscanf(input, "%d %d", &key, &value);
+                
+                btree->Delete(key);
+                btree->Print(print_file);
+                
             }
             fclose(input);
             printf("삭제를 완료했습니다..\n현재 데이터 개수 %d\n", btree->count);

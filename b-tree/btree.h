@@ -167,7 +167,10 @@ public:
             this->pointers[target + 1] = NULL;
             right = NULL;
         }
-        
+
+        left->keys[left->numKeys] = 0;
+        left->values[left->numKeys] = 0;
+
         this->pointers[target + 1] = left;
         
         for (i = target; i <= this->numKeys; i++)
