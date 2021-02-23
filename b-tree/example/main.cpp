@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "btree.h"
 
 #define RELEASE
@@ -75,16 +76,19 @@ int main()
             {
                 if (i % 5 == 0)
                 {
-                    printf("%d : %d check\n", i, btree->count);
+                    printf("%d : %d\n", i, btree->count);
                 }
-                fscanf(input, "%d %d", &key, &value);
-                
+                if (fscanf(input, "%d %d", &key, &value) < 1)
+                {
+                    break;
+                }
+
                 btree->Delete(key);
             }
             fclose(input);
             printf("삭제를 완료했습니다..\n현재 데이터 개수 %d\n", btree->count);
+               
             char delete_file[] = "delete_result.csv";
-            //btree->Print(delete_file);
             FILE* delete_out = fopen(delete_file, "w");
             for (i = 0; i < data_n; i++)
             {
@@ -101,6 +105,42 @@ int main()
             fclose(delete_out);
             // tree 탐색..
             printf("삭제 결과 저장 완료했습니다..\n");
+            
+
+            FILE* delete_in = fopen(delete_file, "r");
+            rewind(delete_in);
+
+            char compare_file[] = "delete_compare.csv";
+            FILE* compare_in = fopen(compare_file, "r");
+
+            char str_compare[1000] = { '\0' };
+            char str_delete[1000] = { '\0' };
+            int line_count = 0;
+            int diff_count = 0;
+            while (fscanf(compare_in, " %[^\n]s", str_compare)>0 && fscanf(delete_in, " %[^\n]s", str_delete)>0)
+            {
+                //printf("%s\n", str_delete);
+                if (strcmp(str_compare, str_delete) != 0)
+                {
+                    printf("%s\n", compare_file);
+                    printf(">>> %s\n", str_compare);
+                    printf("%s\n", delete_file);
+                    printf("<<< %s\n", str_delete);
+                    diff_count++;
+                }
+                line_count++;
+            }
+            fclose(delete_in);
+            fclose(compare_in);
+            if (diff_count == 0)
+            {
+                printf("%s 와 %s가 다른 부분이 없습니다.\n", delete_file, compare_file);
+            }
+            else
+            {
+                printf("%s 와 %s가 %d개의 줄이 서로 다릅니다.\n", delete_file, compare_file, diff_count);
+            }
+            printf("%d 줄을 비교를 완료했습니다.\n", line_count);
         }
         else if (mode == 4)
         {
