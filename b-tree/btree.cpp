@@ -24,7 +24,6 @@ int Btree::Insert(int key, int value)
         this->root = new Node(this->order, true);
         this->root = this->root->AddRecord(key, value, NULL, NULL ,true, this->order);
         this->count = 1;
-        this->root->isRoot = true;
         return key;
     }
     else
@@ -90,6 +89,10 @@ int Btree::_Search(int key)
 
     while (node != nullptr)
     {
+        if (node->numKeys >= this->order)
+        {
+            printf("Error! : Error Over Keys! @ _Search: %d\n", node->numKeys);
+        }
         for (i = 0; i < node->numKeys; i++)
         {
             if (key >= node->keys[i])
@@ -194,11 +197,13 @@ Node* Btree::_Delete(Node* node, int key)
 
             Node* borrow;
             
-            if (left_child_num >= t && node->pointers[target]!=nullptr)
+            //if (left_child_num >= t && node->pointers[target]!=nullptr)
+            if (left_child_num >= 1 && node->pointers[target]!=nullptr)
+            //if (node->pointers[target] != nullptr)
             {
                 // left child borrow
                 borrow = node->pointers[target];
-                while (borrow != nullptr && !borrow->isLeaf)
+                while (borrow != nullptr && !borrow->isLeaf && borrow->pointers[borrow->numKeys]!=nullptr)
                 {
                     borrow = borrow->pointers[borrow->numKeys];
                 }
@@ -211,13 +216,18 @@ Node* Btree::_Delete(Node* node, int key)
                     _Delete(node->pointers[target], key);
                     //node = _Delete(node->pointers[target], key);
                 }
+                else
+                {
+                    printf("Error! : Borrow from Left Error!\n");
+                    while (1);
+                }
             }
             //else if (right_child_num >= t && node->pointers[target+1] != nullptr)
             else
             {
                 // right child borrow
                 borrow = node->pointers[target+1];
-                while (borrow != nullptr && !borrow->isLeaf)
+                while (borrow != nullptr && !borrow->isLeaf && borrow->pointers[0]!= nullptr)
                 {
                     borrow = borrow->pointers[0];
                 }
@@ -230,34 +240,61 @@ Node* Btree::_Delete(Node* node, int key)
                     _Delete(node->pointers[target + 1], key);
                     //node = _Delete(node->pointers[target + 1], key);
                 }
+                else
+                {
+                    printf("Error! : Borrow from Right Error!\n");
+                    while (1);
+                }
             }
         }
     }
     else
     {
         _Delete(node->pointers[target], key);
-        //node = _Delete(node->pointers[target], key);
+        if (node->pointers[0] != nullptr && node->pointers[0]->numKeys == 0)
+        {
+            Node * tmp = node->pointers[0]->pointers[0];
+            free(node->pointers[0]);
+            node->pointers[0] = NULL;
+            node->pointers[0] = tmp;
+        }
+
         if (node->pointers[0] != nullptr && node->numKeys == 0)
         {
             node = node->Merge(0);
+            if (node->numKeys == this->order)
+            {
+                printf("Error! : Merge Error! Type1\n");
+                while (1);
+            }
         }
-        /*else if (node->pointers[0] != nullptr && node->numKeys <= 1 && node->pointers[0]->numKeys<this->order)
-        {
-            node = node->Merge(0);
-        }*/
-        else if (target < node->numKeys && node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && (node->pointers[target]->numKeys < t && node->pointers[target + 1]->numKeys <t))
+        else if (target < node->numKeys && node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && (node->pointers[target]->numKeys < t && node->pointers[target + 1]->numKeys <t) && node->pointers[target]->numKeys + node->pointers[target + 1]->numKeys + 1 < this->order)
         {
             // target , target + 1
             node = node->Merge(target);
+            if (node->numKeys == this->order)
+            {
+                printf("Error! : Merge Error! Type2\n");
+                while (1);
+            }
         }
-        else if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys < t && node->pointers[target]->numKeys < t))
+        else if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys < t && node->pointers[target]->numKeys < t) && node->pointers[target - 1]->numKeys + node->pointers[target]->numKeys + 1 < this->order )
         {
             // target - 1, target
             node = node->Merge(target - 1);
+            if (node->numKeys == this->order)
+            {
+                printf("Error! : Merge Error! Type3\n");
+                
+            }
         }
     }
 
     // merge
-    
+    if (node->numKeys >= this->order)
+    {
+        printf("Error! : Error Over Keys! : %d\n", node->numKeys);
+        while (1);
+    }
     return node;
 }

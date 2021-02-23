@@ -3,7 +3,7 @@
 #include <string.h>
 #include "btree.h"
 
-#define RELEASE
+//#define RELEASE
 
 int* array_key;
 Btree * btree;
@@ -82,7 +82,10 @@ int main()
                 {
                     break;
                 }
-
+                if (key == 2050104582)
+                {
+                    printf("check\n");
+                }
                 btree->Delete(key);
             }
             fclose(input);

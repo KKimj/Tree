@@ -12,7 +12,7 @@ public:
     int* keys;
     int* values;
     Node ** pointers;
-    bool isRoot, isLeaf;
+    bool isLeaf;
     int numKeys;
     
     Node(int order, bool _isLeaf)
@@ -33,7 +33,6 @@ public:
         this->parent = NULL;
 
         this->isLeaf = _isLeaf;
-        this->isRoot = false;
 
     }
 
@@ -60,7 +59,7 @@ public:
             this->pointers[target+1] = rightPointer;
             this->numKeys++;
         }
-        if(!(this->numKeys < order))
+        if(!(this->numKeys < order ))
         {
             Node* tmp = new Node(order, false);
             Node* right = new Node(order, isLeaf);
@@ -172,15 +171,18 @@ public:
         left->values[left->numKeys] = 0;
 
         this->pointers[target + 1] = left;
-        
-        for (i = target; i <= this->numKeys; i++)
+        // TODO
+        for (i = target; i < this->numKeys; i++)
         {
             this->keys[i] = this->keys[i + 1];
             this->values[i] = this->values[i + 1];
             this->pointers[i] = this->pointers[i + 1];
         }
+        this->pointers[this->numKeys] = NULL;
         this->pointers[target] = left;
         this->numKeys--;
+        this->keys[this->numKeys] = 0;
+        this->values[this->numKeys] = 0;
         return this;
     }
 };
