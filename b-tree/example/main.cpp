@@ -54,8 +54,17 @@ int main()
 
             for (i = 0; i < data_n; i++)
             {
-                fscanf(input, "%d %d", &key, &value);
-                array_key[i] = btree->Insert(key, value);
+                if (fscanf(input, "%d %d", &key, &value) > 0)
+                {
+                    array_key[i] = btree->Insert(key, value);
+                }
+                else
+                {
+                    data_n = i;
+                    printf("%d개의 데이터만 삽입 됐습니다.\n", i + 1);
+                    printf("%s가 파일의 맨 끝에 도달하였습니다.\n", filename);
+                    break;
+                }
             }
             fclose(input);
             printf("삽입을 완료했습니다..\n");
@@ -81,10 +90,6 @@ int main()
                 if (fscanf(input, "%d %d", &key, &value) < 1)
                 {
                     break;
-                }
-                if (key == 2050104582)
-                {
-                    printf("check\n");
                 }
                 btree->Delete(key);
             }
