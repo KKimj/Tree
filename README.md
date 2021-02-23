@@ -1,8 +1,8 @@
 # Tree
 
 Develop Status
-- [x] AVL Tree
-- [x] B-Tree
+- [x] AVL tree
+- [x] B-tree
 
 ## Getting Started
 ```
