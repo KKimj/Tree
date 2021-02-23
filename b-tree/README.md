@@ -19,6 +19,10 @@
 - insert_result.csv
 - delete_result.csv
 
+## 주의사항
+
+100만개의 데이터를 문제 없이 저장하기 위해서는, B-tree의 Order를 40이상으로 설정한다. 100이상을 권장한다.
+
 ## 테스트 방법
 0. Visual studio 2019을 설치한다.
 0. C++ 프로젝트 마법사로, 빈 프로젝트를 생성한다.
