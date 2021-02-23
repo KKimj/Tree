@@ -245,12 +245,12 @@ Node* Btree::_Delete(Node* node, int key)
         {
             node = node->Merge(0);
         }*/
-        else if (target < node->numKeys && node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && (node->pointers[target]->numKeys + node->pointers[target + 1]->numKeys <this->order))
+        else if (target < node->numKeys && node->pointers[target] != nullptr && node->pointers[target + 1] != nullptr && (node->pointers[target]->numKeys < t && node->pointers[target + 1]->numKeys <t))
         {
             // target , target + 1
             node = node->Merge(target);
         }
-        else if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys + node->pointers[target]->numKeys < this->order))
+        else if (target > 0 && node->pointers[target - 1] != nullptr && node->pointers[target] != nullptr && (node->pointers[target - 1]->numKeys < t && node->pointers[target]->numKeys < t))
         {
             // target - 1, target
             node = node->Merge(target - 1);

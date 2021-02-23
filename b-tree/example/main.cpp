@@ -31,12 +31,12 @@ int main()
             printf("file name을 입력해주세요. 100자 이내.\n");
             scanf(" %s", filename);
             data_n = 1000000;
-            order = 3;
+            order = 200;
             btree = new Btree(order);
 
 #else
             printf("file name을 입력해주세요. 100자 이내.\n");
-            scanf(" %s", filename);
+            //scanf(" %s", filename);
             printf("데이터의 개수를 입력하세요. 0입력시 100만개.\n");
             scanf("%d", &data_n);
             data_n = data_n == 0 ? 1000000 : data_n;
